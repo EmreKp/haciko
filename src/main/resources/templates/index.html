@@ -1,13 +1,45 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/dist/css/bootstrap.min.css">
-    <title>Main Page</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Haciko</title>
 </head>
 <body>
 <div class="container pt-2">
-    <form method="post" th:object="${entry}">
+    <nav class="navbar">
+        <p class="navbar-brand mr-auto">Chanımıza hoşgeldiniz!</p>
+        <p class="navbar-text" sec:authorize="isAnonymous()">
+            <a href="/login">Giriş Yap</a> | <a href="/register">Kayıt Ol</a>
+        </p>
+        <p sec:authorize="isAuthenticated()">
+            Hoşgeldin, <b sec:authentication="name"></b>! | <a href="/logout">Çıkış yap</a>
+        </p>
+    </nav>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <div class="list-group">
+        <div class="list-group-item flex-column" th:each="post : ${posts}">
+            <p th:text="${post.message}"></p>
+            <div class="d-flex justify-content-between">
+                <small th:text="${post.nick}"></small>
+                <small th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></small>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container pt-2">
+    <form method="post" th:object="${post}">
+        <div class="form-group row" sec:authorize="isAnonymous()">
+            <label for="nick" class="col-sm-3">Nick</label>
+            <div class="col-sm-9">
+                <input type="text" required class="form-control" th:field="*{nick}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="category"></label>
+        </div>
         <div class="form-group">
             <label for="message">Mesaj</label>
             <textarea class="form-control" th:field="*{message}"></textarea>
