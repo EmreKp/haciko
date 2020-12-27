@@ -1,0 +1,5 @@
+CREATE TABLE entries (
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `message` TEXT NOT NULL,
+    `created_at` DATETIME NOT NULL
+);

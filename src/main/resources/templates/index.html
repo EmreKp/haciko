@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/dist/css/bootstrap.min.css">
+    <title>Main Page</title>
+</head>
+<body>
+<div class="container pt-2">
+    <form method="post" th:object="${entry}">
+        <div class="form-group">
+            <label for="message">Mesaj</label>
+            <textarea class="form-control" th:field="*{message}"></textarea>
+        </div>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit" class="btn btn-success">Yolla</button>
+    </form>
+</div>
+</body>
+</html>
