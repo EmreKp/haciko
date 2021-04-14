@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  haciko:
+    build: .
+    depends_on:
+      - db
+    ports:
+    - "8080:8080"
+    environment:
+      DATASOURCE_URL: "jdbc:mysql://db/haciko?useUnicode=true&characterEncoding=UTF-8"
+      DATASOURCE_USERNAME: "root"
+      DATASOURCE_PASSWORD: "123456"
+  db:
+    image: "mysql:8.0"
+    ports:
+    - "33306:3306"
+    volumes:
+    - ./docker-db-init.sql:/docker-entrypoint-initdb.d/1.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
