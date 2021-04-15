@@ -4,6 +4,9 @@ import com.emrekp.haciko.entity.Member;
 import com.emrekp.haciko.entity.Post;
 import com.emrekp.haciko.repo.MemberRepository;
 import com.emrekp.haciko.repo.PostRepository;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,8 +28,18 @@ public class MainService {
         this.memberRepository = memberRepository;
     }
 
-    public Iterable<Post> fetchAll() {
-        return postRepository.findAll();
+    public Iterable<Post> getPosts(Authentication auth) {
+        List<Post> posts = postRepository.findAllPublicPosts();
+
+        if (auth != null) {
+            Member member = memberRepository.findByNick(auth.getName());
+
+            posts.addAll(postRepository.findMemberPrivatePosts(member));
+        }
+
+        return posts.stream()
+            .sorted(Comparator.comparing(Post::getCreatedAt))
+            .collect(Collectors.toList());
     }
 
     public void postMsg(Post post) {

@@ -1,0 +1,1 @@
+ALTER TABLE posts ADD COLUMN is_public TINYINT(1) DEFAULT 1 AFTER category_id;

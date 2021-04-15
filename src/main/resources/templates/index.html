@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/dist/css/bootstrap.min.css">
+    <!-- TODO: Use WebJars when maven indexed -->
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Haciko</title>
@@ -20,10 +22,11 @@
     </nav>
     <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
     <div class="list-group">
-        <div class="list-group-item flex-column" th:each="post : ${posts}">
+        <div class="list-group-item flex-column" th:each="post : ${posts}" th:classappend="${!post.public} ? 'bg-light'">
             <p th:text="${post.message}"></p>
             <div class="d-flex justify-content-between">
                 <small th:text="${post.nick}"></small>
+                <small th:unless="${post.public}"><b>Gizli post</b></small>
                 <small th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></small>
             </div>
         </div>
@@ -45,8 +48,21 @@
             <textarea class="form-control" th:field="*{message}"></textarea>
         </div>
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <button type="submit" class="btn btn-success">Yolla</button>
+        <div class="form-group row">
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success">Yolla</button>
+            </div>
+            <div class="col-auto" sec:authorize="isAuthenticated()">
+                <input type="checkbox"
+                       data-toggle="switchbutton"
+                       data-onlabel="Herkese açık"
+                       data-offlabel="Gizli"
+                       th:field="*{public}">
+            </div>
+        </div>
     </form>
 </div>
+<!-- TODO: Use WebJars when maven indexed -->
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
 </body>
 </html>
