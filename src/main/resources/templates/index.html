@@ -20,6 +20,7 @@
         </p>
     </nav>
     <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <div class="alert alert-info" th:if="${param.logout}">Başarıyla çıkış yapıldı.</div>
     <div class="list-group">
         <div class="list-group-item flex-column" th:each="post : ${posts}" th:classappend="${!post.public} ? 'bg-light'">
             <p th:text="${post.message}"></p>

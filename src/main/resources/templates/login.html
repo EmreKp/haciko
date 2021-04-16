@@ -10,6 +10,7 @@
 <body>
 <div class="container pt-4">
     <h1>Login Ol</h1>
+    <div th:if="${param.error}" class="alert alert-danger">Kullanıcı adı veya şifre hatalı.</div>
     <form method="post">
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Nick:</label>
