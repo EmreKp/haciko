@@ -58,6 +58,7 @@
                        data-offlabel="Gizli"
                        th:field="*{public}">
             </div>
+            <input type="hidden" sec:authorize="isAnonymous()" th:field="*{public}"><!-- Default is true !-->
         </div>
     </form>
 </div>
