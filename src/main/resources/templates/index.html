@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/dist/css/bootstrap.min.css">
-    <!-- TODO: Use WebJars when maven indexed -->
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/webjars/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Haciko</title>
@@ -27,7 +26,7 @@
             <div class="d-flex justify-content-between">
                 <small th:text="${post.nick}"></small>
                 <small th:unless="${post.public}"><b>Gizli post</b></small>
-                <small th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></small>
+                <small th:text="${post.createdAt}" class="post-date"></small>
             </div>
         </div>
     </div>
@@ -62,7 +61,20 @@
         </div>
     </form>
 </div>
-<!-- TODO: Use WebJars when maven indexed -->
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+<script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>
+<script src="/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Convert each datetime to locale string.
+        $('.post-date').each(function (index) {
+            var UTCDate = new Date($(this).text() + 'Z');
+
+            // TR language is only for formatting, does not affect locale time
+            var localeDateWithoutSecs = UTCDate.toLocaleString('tr-TR').slice(0, -3);
+
+            $('.post-date').eq(index).text(localeDateWithoutSecs);
+        })
+    })
+</script>
 </body>
 </html>
