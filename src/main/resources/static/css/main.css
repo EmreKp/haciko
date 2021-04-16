@@ -1,3 +1,7 @@
 body {
     /* text-align: center; */
 }
+
+.switch.btn {
+    width: 8.5rem !important; /* Tested on Google Chrome */
+}

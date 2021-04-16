@@ -4,6 +4,8 @@ import com.emrekp.haciko.entity.Member;
 import com.emrekp.haciko.entity.Post;
 import com.emrekp.haciko.service.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +25,12 @@ public class MainController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("posts", service.fetchAll());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        model.addAttribute("post", new Post());
+        model.addAttribute("posts", service.getPosts(auth));
+
+        // Set post and change checkbox as default true. TODO: Make this in HTML layer.
+        model.addAttribute("post", new Post().setPublic(true));
 
         return "index";
     }

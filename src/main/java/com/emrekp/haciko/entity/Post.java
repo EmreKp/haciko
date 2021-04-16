@@ -20,6 +20,8 @@ public class Post {
     @ManyToOne
     private Category category;
 
+    private Boolean isPublic;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -75,5 +77,15 @@ public class Post {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public Post setPublic(Boolean aPublic) {
+        this.isPublic = aPublic;
+
+        return this;
     }
 }
