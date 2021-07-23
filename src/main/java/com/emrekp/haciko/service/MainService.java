@@ -38,7 +38,7 @@ public class MainService {
         }
 
         return posts.stream()
-            .sorted(Comparator.comparing(Post::getCreatedAt))
+            .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
             .collect(Collectors.toList());
     }
 

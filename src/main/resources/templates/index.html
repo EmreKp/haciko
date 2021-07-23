@@ -21,16 +21,6 @@
     </nav>
     <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
     <div class="alert alert-info" th:if="${param.logout}">Başarıyla çıkış yapıldı.</div>
-    <div class="list-group">
-        <div class="list-group-item flex-column" th:each="post : ${posts}" th:classappend="${!post.public} ? 'bg-light'">
-            <p th:text="${post.message}"></p>
-            <div class="d-flex justify-content-between">
-                <small th:text="${post.nick}"></small>
-                <small th:unless="${post.public}"><b>Gizli post</b></small>
-                <small th:text="${post.createdAt}" class="post-date"></small>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="container pt-2">
     <form method="post" th:object="${post}">
@@ -62,6 +52,18 @@
             <input type="hidden" sec:authorize="isAnonymous()" th:field="*{public}"><!-- Default is true !-->
         </div>
     </form>
+</div>
+<div class="container pt-2">
+    <div class="list-group">
+        <div class="list-group-item flex-column" th:each="post : ${posts}" th:classappend="${!post.public} ? 'bg-light'">
+            <p th:text="${post.message}"></p>
+            <div class="d-flex justify-content-between">
+                <small th:text="${post.nick}"></small>
+                <small th:unless="${post.public}"><b>Gizli post</b></small>
+                <small th:text="${post.createdAt}" class="post-date"></small>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>
 <script src="/webjars/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
