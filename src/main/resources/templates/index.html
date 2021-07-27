@@ -16,7 +16,9 @@
             <a href="/login">Giriş Yap</a> | <a href="/register">Kayıt Ol</a>
         </p>
         <p sec:authorize="isAuthenticated()">
-            Hoşgeldin, <b sec:authentication="name"></b>! | <a href="/logout">Çıkış yap</a>
+            Hoşgeldin, <b sec:authentication="name"></b>!
+            | <a href="/polls/new">Anket ekle</a>
+            | <a href="/logout">Çıkış yap</a>
         </p>
     </nav>
     <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>

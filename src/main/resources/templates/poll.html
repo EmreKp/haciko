@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Haciko - Anket</title>
+</head>
+<body>
+<div class="container pt-2">
+  <h2 th:text="${poll.question}"></h2>
+  <form method="post" th:if="${(selectedChoice == null) && !isExpired}">
+    <div class="btn-group btn-group-vertical btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-light btn-lg btn-block" th:each="choice : ${poll.choices}" th:inline="text" >
+        <input type="radio" name="choiceId" th:value="${choice.id}"> [[${choice.text}]]
+      </label>
+    </div>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <div class="form-group">
+      <button type="submit" class="btn btn-success btn-block">Sonuçları Göster</button>
+    </div>
+  </form>
+  <div class="poll-progress" th:if="${(selectedChoice != null) || isExpired}" th:each="choice : ${poll.choices}">
+    <span th:inline="text">
+      [[${choice.text}]] (Oy sayısı: [[${choice.voteCount}]])
+      <i th:class="${choice.id == selectedChoice ? 'fas fa-check-circle': ''}"></i>
+    </span>
+    <div class="progress">
+      <div class="progress-bar progress-bar-striped" role="progressbar"
+           th:classappend="${choice.id != selectedChoice ? 'bg-info': ''}"
+           th:style="${'width: ' + #numbers.formatDecimal(choice.voteCount * 100 / totalVotes, 0, 2) + '%'}"
+           th:attr="aria-valuenow=${#numbers.formatDecimal(choice.voteCount * 100 / totalVotes, 0, 2)}"
+           aria-valuemin="0" aria-valuemax="100"
+           th:text="${'%' + #numbers.formatDecimal(choice.voteCount * 100 / totalVotes, 0, 2)}">
+      </div>
+    </div>
+  </div>
+  <div id="countdown"></div>
+</div>
+<script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>
+<script src="/webjars/bootstrap/4.0.0/js/dist/button.js"></script>
+<script th:inline="javascript" th:unless="${isExpired}">
+  var expireTime = new Date([[${poll.expiresAt} + 'Z']]);
+
+  setInterval(function () {
+    var nowTime = new Date();
+    var leftDate = new Date(expireTime - nowTime);
+
+    var leftHrs = twoDigitTime(leftDate.getUTCHours());
+    var leftMins = twoDigitTime(leftDate.getUTCMinutes());
+    var leftSecs = twoDigitTime(leftDate.getUTCSeconds());
+
+    $("#countdown").html("Kalan süre: <b>" + leftHrs + ":" + leftMins + ":" + leftSecs + "</b>");
+  }, 1000);
+
+  function twoDigitTime(time) {
+    if (time < 10) {
+      time = "0" + time;
+    }
+
+    return time;
+  }
+  </script>
+<script src="https://kit.fontawesome.com/fe8058c5fa.js" crossorigin="anonymous"></script>
+</body>
+</html>

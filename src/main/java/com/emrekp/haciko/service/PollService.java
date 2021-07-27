@@ -1,0 +1,56 @@
+package com.emrekp.haciko.service;
+
+import com.emrekp.haciko.dto.PollDto;
+import com.emrekp.haciko.entity.Poll;
+import com.emrekp.haciko.entity.PollChoice;
+import com.emrekp.haciko.repo.PollRepository;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PollService {
+
+  private static final int CHOICE_MIN_LIMIT = 2;
+  private static final int CHOICE_MAX_LIMIT = 7;
+
+  private final PollRepository repository;
+
+  @Autowired
+  public PollService(PollRepository repository) {
+    this.repository = repository;
+  }
+
+  public Poll getPoll(Long id) {
+    return repository.find(id);
+  }
+
+  public PollChoice vote(Long id) {
+    PollChoice choice = repository.findChoice(id);
+
+    choice.setVoteCount(choice.getVoteCount() + 1);
+
+    return repository.saveChoice(choice);
+  }
+
+  public Poll convertAndSavePoll(PollDto pollDto) {
+    int choiceCount = pollDto.getChoices().size();
+    if (choiceCount < 2 || choiceCount > 7) {
+      throw new RuntimeException("Ögeyi denetleyle oynama KEKW");
+    }
+
+    LocalDateTime expireTime = null;
+    Integer expireSeconds = pollDto.getExpireInterval();
+    if (expireSeconds != null && expireSeconds != -1) {
+      expireTime = LocalDateTime.now().plusSeconds(expireSeconds);
+    }
+
+    // Convert DTO to plain Poll object.
+    Poll poll = new Poll()
+        .setQuestion(pollDto.getQuestion())
+        .setChoices(pollDto.getChoices())
+        .setExpiresAt(expireTime);
+
+    return repository.save(poll);
+  }
+}
