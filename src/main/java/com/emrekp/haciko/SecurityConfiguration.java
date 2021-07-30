@@ -25,9 +25,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/register", "/polls/**").permitAll()
+                .antMatchers("/topic/**", "/sockets/**").permitAll()
                 .antMatchers("/webjars/**", "/css/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()
+                .and().csrf().ignoringAntMatchers("/polls/vote")
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                 .logoutSuccessUrl("/?logout");

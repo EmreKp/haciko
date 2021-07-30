@@ -6,6 +6,7 @@ import com.emrekp.haciko.entity.PollChoice;
 import com.emrekp.haciko.repo.PollRepository;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +16,12 @@ public class PollService {
   private static final int CHOICE_MAX_LIMIT = 7;
 
   private final PollRepository repository;
+  private final SimpMessagingTemplate messagingTemplate;
 
   @Autowired
-  public PollService(PollRepository repository) {
+  public PollService(PollRepository repository, SimpMessagingTemplate messagingTemplate) {
     this.repository = repository;
+    this.messagingTemplate = messagingTemplate;
   }
 
   public Poll getPoll(Long id) {
@@ -52,5 +55,9 @@ public class PollService {
         .setExpiresAt(expireTime);
 
     return repository.save(poll);
+  }
+
+  public void publishVote(PollChoice choice) {
+    messagingTemplate.convertAndSend("/topic/votes", choice.getId());
   }
 }
