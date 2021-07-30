@@ -39,7 +39,7 @@
 </div>
 <script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.0.0/js/dist/button.js"></script>
-<script th:inline="javascript" th:unless="${isExpired}">
+<script th:inline="javascript" th:if="${!isExpired && poll.expiresAt != null}">
   var expireTime = new Date([[${poll.expiresAt} + 'Z']]);
 
   setInterval(function () {
