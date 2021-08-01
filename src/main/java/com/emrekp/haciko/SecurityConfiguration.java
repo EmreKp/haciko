@@ -31,8 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().csrf().ignoringAntMatchers("/polls/vote")
                 .and().logout()
+                .deleteCookies("JSESSIONID")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                .logoutSuccessUrl("/?logout");
+                .logoutSuccessUrl("/?logout")
+                .and().rememberMe().key("haciko-remember-me");
     }
 
     @Override
