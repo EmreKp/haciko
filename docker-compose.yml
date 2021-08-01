@@ -4,17 +4,23 @@ services:
     build: .
     depends_on:
       - db
+      - redis
     ports:
-    - "8080:8080"
+      - "8080:8080"
     environment:
       DATASOURCE_URL: "jdbc:mysql://db/haciko?useUnicode=true&characterEncoding=UTF-8"
       DATASOURCE_USERNAME: "root"
       DATASOURCE_PASSWORD: "123456"
+      REDIS_HOST: "redis"
   db:
     image: "mysql:8.0"
     ports:
-    - "33306:3306"
+      - "33306:3306"
     volumes:
-    - ./docker-db-init.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./docker-db-init.sql:/docker-entrypoint-initdb.d/1.sql
     environment:
       MYSQL_ROOT_PASSWORD: "123456"
+  redis:
+    image: "redis:5.0.6-alpine3.10"
+    ports:
+      - "63379:6379"
