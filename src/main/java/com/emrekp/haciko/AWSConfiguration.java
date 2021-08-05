@@ -10,7 +10,7 @@ import org.springframework.session.data.redis.config.ConfigureRedisAction;
 public class AWSConfiguration {
 
   @Bean
-  public static ConfigureRedisAction configureRedisActionForK8S() {
+  public static ConfigureRedisAction configureRedisAction() {
     return ConfigureRedisAction.NO_OP;
   }
 }

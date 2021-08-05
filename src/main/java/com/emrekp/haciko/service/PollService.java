@@ -6,6 +6,7 @@ import com.emrekp.haciko.entity.PollChoice;
 import com.emrekp.haciko.repo.PollRepository;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class PollService {
 
   private static final int CHOICE_MIN_LIMIT = 2;
   private static final int CHOICE_MAX_LIMIT = 7;
+
+  @Value("${poll.page-hacking-exception-message}")
+  private String PAGE_HACK_EXCEPTION_MESSAGE;
 
   private final PollRepository repository;
   private final SimpMessagingTemplate messagingTemplate;
@@ -38,8 +42,8 @@ public class PollService {
 
   public Poll convertAndSavePoll(PollDto pollDto) {
     int choiceCount = pollDto.getChoices().size();
-    if (choiceCount < 2 || choiceCount > 7) {
-      throw new RuntimeException("Ögeyi denetleyle oynama KEKW");
+    if (choiceCount < CHOICE_MIN_LIMIT || choiceCount > CHOICE_MAX_LIMIT) {
+      throw new RuntimeException(PAGE_HACK_EXCEPTION_MESSAGE);
     }
 
     LocalDateTime expireTime = null;

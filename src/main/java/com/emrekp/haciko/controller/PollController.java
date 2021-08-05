@@ -32,13 +32,8 @@ public class PollController {
 
   @GetMapping("/new")
   public String addPollPage(Model model) {
-    PollDto pollDto = new PollDto();
-
-    for (int i = 0; i < 2; i++) {
-      pollDto.addChoice(new PollChoice());
-    }
-
-    model.addAttribute("poll", pollDto);
+    // Add poll with two choices at start.
+    model.addAttribute("poll", new PollDto().addChoice(new PollChoice()).addChoice(new PollChoice()));
 
     return "poll_new";
   }
@@ -73,12 +68,14 @@ public class PollController {
     }
 
     model.addAttribute("selectedChoice", selectedChoice);
-
-    double totalVotes = poll.getChoices().stream().mapToInt(PollChoice::getVoteCount).sum();
-    model.addAttribute("totalVotes", totalVotes);
-
-    boolean isExpired = poll.getExpiresAt() != null && poll.getExpiresAt().isBefore(LocalDateTime.now());
-    model.addAttribute("isExpired", isExpired);
+    model.addAttribute(
+        "totalVotes",
+        poll.getChoices().stream().mapToInt(PollChoice::getVoteCount).sum()
+    );
+    model.addAttribute(
+        "isExpired",
+        poll.getExpiresAt() != null && poll.getExpiresAt().isBefore(LocalDateTime.now())
+    );
 
     return "poll";
   }
