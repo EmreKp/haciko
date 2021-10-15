@@ -5,3 +5,19 @@ body {
 .switch.btn {
     width: 8.5rem !important; /* Tested on Google Chrome */
 }
+
+.btn-group-vertical {
+    width: 100%;
+}
+
+.btn-group-vertical .btn, .poll-progress {
+    margin-bottom: 20px;
+}
+
+.poll-progress .progress {
+    height: 27px;
+}
+
+#addChoice, select.form-control {
+    margin-bottom: 10px;
+}

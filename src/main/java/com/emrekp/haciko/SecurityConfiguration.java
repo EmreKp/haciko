@@ -24,10 +24,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/register").permitAll()
+                .antMatchers("/", "/register", "/polls/**").permitAll()
+                .antMatchers("/topic/**", "/sockets/**").permitAll()
                 .antMatchers("/webjars/**", "/css/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()
+                .and().csrf().ignoringAntMatchers("/polls/vote")
                 .and().logout()
                 .deleteCookies("JSESSIONID")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Haciko - Anket Ekle</title>
+</head>
+<body>
+<div class="container pt-2">
+  <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+  <form method="post" th:object="${poll}">
+    <div class="form-group">
+      <input type="text" th:field="*{question}"
+             class="form-control form-control-lg" required="required" placeholder="Soru ekle...">
+    </div>
+    <div class="input-group mb-3" th:each="choice, stats : *{choices}">
+      <input type="text" th:field="*{choices[__${stats.index}__].text}"
+             class="form-control" required="required" placeholder="Cevap ekle..">
+      <div class="input-group-append d-none">
+        <button type="button" class="btn btn-danger deleteBtn">X</button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-success btn-block" id="addChoice">Şık ekle...</button>
+    <select class="form-control" th:field="*{expireInterval}">
+      <option th:each="interval : ${T(com.emrekp.haciko.dto.ExpireInterval).values()}"
+              th:text="${interval.text}" th:value="${interval.seconds}"></option>
+    </select>
+    <div class="form-group">
+      <button type="submit" class="btn btn-success btn-block">Anketi Oluştur</button>
+    </div>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  </form>
+</div>
+<script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Delete button is hidden in input field, make it visible from 3rd input.
+    $("#addChoice").click(function () {
+      var choices = $("input[name^='choices']");
+      var choiceMaxLimit = 7;
+
+      var lastChoice = choices.last().parent();
+      var choiceLength = choices.length;
+
+      if (choiceLength === choiceMaxLimit - 1) {
+        $(this).prop("disabled", true);
+      }
+
+      lastChoice.find(".input-group-append").removeClass("d-none");
+
+      var lastChoiceClone = lastChoice.clone();
+      lastChoiceClone
+        .find("input")
+        .attr("name", "choices[" + choiceLength + "].text")
+        .attr("id", "choices" + choiceLength + ".text")
+        .val("");
+
+      lastChoice.find(".input-group-append").addClass("d-none");
+
+      $(this).before(lastChoiceClone);
+    });
+
+    // Delete last input where button exists and let last delete button appear again.
+    $(document).on("click", ".deleteBtn", function () {
+      $(this).closest(".input-group").remove();
+
+      var choices = $("input[name^='choices']");
+
+      if (choices.length > 2) {
+        choices.last().siblings(".input-group-append").removeClass("d-none");
+      }
+    })
+  });
+</script>
+</body>
+</html>
